@@ -17,6 +17,9 @@ fft = 2048
 hop = 512
 sr = 48000
 length = 10 * sr
+test_stride = length // 2
+test_slice = [(i*test_stride, i*test_stride+length) for i in range((60*48000-length)//test_stride + 1)]
+
 melspectrogram_parameters = {
         "n_mels": 256,
         'n_fft': 2048, 
@@ -91,15 +94,9 @@ class TestDataset(Dataset):
     def __getitem__(self, idx):
         audio_file_path = os.path.join(data_path, 'test', self.test_files[idx])
         wav, _ = librosa.load(audio_file_path, sr=sr)
-        segments = len(wav) / length
-        segments = int(np.ceil(segments))
         img = []
-        for i in range(0, segments):
-            # Last segment going from the end
-            if (i + 1) * length > len(wav):
-                slice = wav[len(wav) - length:len(wav)]
-            else:
-                slice = wav[i * length:(i + 1) * length]
+        for s, e in test_slice:
+            slice = wav[s:e]
             img.append(get_image(slice))
         return torch.tensor(img, dtype=torch.float32)
 

@@ -63,7 +63,7 @@ data_fp_df=pd.read_csv(os.path.join(data_path, 'train_fp.csv'))
 
 test_files = sorted(os.listdir(os.path.join(data_path, 'test')))
 test_dataset = TestDataset(test_files)
-test_dataloader = DataLoader(test_dataset, batch_size=32, sampler=SequentialSampler(test_dataset), shuffle=False, num_workers=4)
+test_dataloader = DataLoader(test_dataset, batch_size=8, sampler=SequentialSampler(test_dataset), shuffle=False, num_workers=6)
 
 with open(os.path.join(model_path, 'resnest_augment_0_02_03_23_36_history.pkl'), 'rb') as f:
     history = pickle.load(f)
